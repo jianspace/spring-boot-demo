@@ -1,9 +1,9 @@
-package com.xkcoding.orm.mybatis.plus.service.impl;
+package com.xkcoding.orm.mybatis.plus.chat.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xkcoding.orm.mybatis.plus.entity.User;
+import com.xkcoding.orm.mybatis.plus.chat.entity.User;
 import com.xkcoding.orm.mybatis.plus.mapper.UserMapper;
-import com.xkcoding.orm.mybatis.plus.service.UserService;
+import com.xkcoding.orm.mybatis.plus.chat.service.UserService;
 import org.springframework.stereotype.Service;
 
 /**

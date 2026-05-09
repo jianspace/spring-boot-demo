@@ -1,4 +1,4 @@
-package com.xkcoding.orm.mybatis.plus.entity;
+package com.xkcoding.orm.mybatis.plus.chat.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

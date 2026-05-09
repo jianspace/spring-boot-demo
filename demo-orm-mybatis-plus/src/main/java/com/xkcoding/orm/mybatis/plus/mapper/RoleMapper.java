@@ -1,7 +1,7 @@
 package com.xkcoding.orm.mybatis.plus.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xkcoding.orm.mybatis.plus.entity.Role;
+import com.xkcoding.orm.mybatis.plus.chat.entity.Role;
 
 /**
  * <p>

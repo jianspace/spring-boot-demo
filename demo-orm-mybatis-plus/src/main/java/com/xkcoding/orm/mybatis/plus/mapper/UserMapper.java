@@ -1,7 +1,7 @@
 package com.xkcoding.orm.mybatis.plus.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xkcoding.orm.mybatis.plus.entity.User;
+import com.xkcoding.orm.mybatis.plus.chat.entity.User;
 import org.springframework.stereotype.Component;
 
 /**

@@ -3,7 +3,7 @@ package com.xkcoding.orm.mybatis.plus.activerecord;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.xkcoding.orm.mybatis.plus.SpringBootDemoOrmMybatisPlusApplicationTests;
-import com.xkcoding.orm.mybatis.plus.entity.Role;
+import com.xkcoding.orm.mybatis.plus.chat.entity.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
