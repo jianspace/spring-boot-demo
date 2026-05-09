@@ -1,7 +1,7 @@
-package com.xkcoding.orm.mybatis.plus.controller;
+package com.xkcoding.orm.mybatis.plus.chat.controller;
 
 
-import com.xkcoding.orm.mybatis.plus.ai.dto.ChatRequest;
+import com.xkcoding.orm.mybatis.plus.chat.dto.ChatRequest;
 import com.xkcoding.orm.mybatis.plus.chat.service.AiChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

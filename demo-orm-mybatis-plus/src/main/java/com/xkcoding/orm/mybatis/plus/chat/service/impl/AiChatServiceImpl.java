@@ -4,7 +4,7 @@ import com.xkcoding.orm.mybatis.plus.ai.AiClient;
 import com.xkcoding.orm.mybatis.plus.ai.client.OpenAiClient;
 import com.xkcoding.orm.mybatis.plus.ai.prompt.PromptBuilder;
 import com.xkcoding.orm.mybatis.plus.chat.domain.ChatRecord;
-import com.xkcoding.orm.mybatis.plus.mapper.ChatRecordMapper;
+import com.xkcoding.orm.mybatis.plus.chat.mapper.ChatRecordMapper;
 import com.xkcoding.orm.mybatis.plus.chat.service.AiChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

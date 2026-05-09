@@ -1,4 +1,4 @@
-package com.xkcoding.orm.mybatis.plus.ai.dto;
+package com.xkcoding.orm.mybatis.plus.chat.dto;
 
 
 

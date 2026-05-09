@@ -1,4 +1,4 @@
-package com.xkcoding.orm.mybatis.plus.mapper;
+package com.xkcoding.orm.mybatis.plus.chat.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xkcoding.orm.mybatis.plus.chat.entity.Role;
