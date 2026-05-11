@@ -25,6 +25,7 @@ public class AiChatController {
     @PostMapping("/chatgpt")
     public String ai(@RequestBody ChatRequest request) {
 
-        return aiChatService.chatGpt( request.getMessage());
+      //  return aiChatService.chatGpt( request.getMessage());
+        return "";
     }
 }

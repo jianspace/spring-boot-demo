@@ -1,7 +1,11 @@
 package com.xkcoding.orm.mybatis.plus.chat.service.impl;
 
-import com.xkcoding.orm.mybatis.plus.ai.AiClient;
+
+
+
+
 import com.xkcoding.orm.mybatis.plus.ai.client.OpenAiClient;
+import com.xkcoding.orm.mybatis.plus.ai.dto.ChatMessage;
 import com.xkcoding.orm.mybatis.plus.ai.prompt.PromptBuilder;
 import com.xkcoding.orm.mybatis.plus.chat.domain.ChatRecord;
 import com.xkcoding.orm.mybatis.plus.chat.mapper.ChatRecordMapper;
@@ -15,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AiChatServiceImpl implements AiChatService {
+public class AiChatServiceImpl
+    implements AiChatService {
 
     @Autowired
     private ChatRecordMapper chatRecordMapper;
@@ -24,48 +29,53 @@ public class AiChatServiceImpl implements AiChatService {
     private PromptBuilder promptBuilder;
 
     @Autowired
-    private AiClient aiClient;
-    @Autowired
     private OpenAiClient openAiClient;
+
     @Override
-    public String chat(Long userId, String message) {
+    public String chat(Long userId,
+                       String message) {
         Map<String, Object> columnMap=new HashMap<>();
         columnMap.put("user_id",userId);
-        // 查询历史记录
-        List<ChatRecord> records = chatRecordMapper.selectByMap(columnMap);
-           // chatRecordMapper.selectRecentByUserId(userId);
+        // 查询最近聊天记录
+        List<ChatRecord> history =chatRecordMapper.selectByMap(columnMap);
 
-        // 构建prompt
-        String prompt =
-            promptBuilder.build(records, message);
+        // 构建messages
+        List<ChatMessage> messages =
+            promptBuilder.build(
+                history,
+                message
+            );
 
         // AI回复
         String reply =
-            aiClient.chat(prompt);
+            openAiClient.chat(messages);
 
         // 保存用户消息
-        save(userId, message, "user");
+        save(userId,
+            "user",
+            message);
 
-        // 保存AI回复
-        save(userId, reply, "assistant");
+        // 保存AI消息
+        save(userId,
+            "assistant",
+            reply);
 
         return reply;
     }
 
-    @Override
-    public String chatGpt(String reqMessage) {
-        return openAiClient.chat(reqMessage);
-    }
-
+    /**
+     * 保存聊天记录
+     */
     private void save(Long userId,
-                      String msg,
-                      String role) {
+                      String role,
+                      String message) {
 
-        ChatRecord record = new ChatRecord();
+        ChatRecord record =
+            new ChatRecord();
 
         record.setUserId(userId);
-        record.setMessage(msg);
         record.setRole(role);
+        record.setMessage(message);
         record.setCreateTime(new Date());
 
         chatRecordMapper.insert(record);

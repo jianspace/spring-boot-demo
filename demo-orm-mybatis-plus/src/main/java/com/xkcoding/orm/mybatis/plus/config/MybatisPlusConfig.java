@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date Created in 2018-11-08 17:29
  */
 @Configuration
-@MapperScan(basePackages = {"com.xkcoding.orm.mybatis.plus.chat.mapper"})
+@MapperScan(
+    basePackages = "com.xkcoding.orm.mybatis.plus.chat.mapper",
+    markerInterface = com.baomidou.mybatisplus.core.mapper.BaseMapper.class
+)
 @EnableTransactionManagement
 public class MybatisPlusConfig {
     /**
