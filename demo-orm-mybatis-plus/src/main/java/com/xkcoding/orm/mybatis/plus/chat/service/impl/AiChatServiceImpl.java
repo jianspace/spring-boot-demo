@@ -4,19 +4,20 @@ package com.xkcoding.orm.mybatis.plus.chat.service.impl;
 
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xkcoding.orm.mybatis.plus.ai.client.OpenAiClient;
 import com.xkcoding.orm.mybatis.plus.ai.dto.ChatMessage;
 import com.xkcoding.orm.mybatis.plus.ai.prompt.PromptBuilder;
+import com.xkcoding.orm.mybatis.plus.chat.cache.ChatContextCache;
 import com.xkcoding.orm.mybatis.plus.chat.domain.ChatRecord;
 import com.xkcoding.orm.mybatis.plus.chat.mapper.ChatRecordMapper;
 import com.xkcoding.orm.mybatis.plus.chat.service.AiChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AiChatServiceImpl
@@ -31,13 +32,21 @@ public class AiChatServiceImpl
     @Autowired
     private OpenAiClient openAiClient;
 
+    @Autowired
+    private ChatContextCache chatContextCache;
+
     @Override
     public String chat(Long userId,
                        String message) {
-        Map<String, Object> columnMap=new HashMap<>();
-        columnMap.put("user_id",userId);
-        // 查询最近聊天记录
-        List<ChatRecord> history =chatRecordMapper.selectByMap(columnMap);
+
+        List<ChatMessage> history = chatContextCache.getContext(userId);
+
+        if (history.isEmpty()) {
+            history = loadFromDb(userId);
+            if (!history.isEmpty()) {
+                cacheContext(userId, history);
+            }
+        }
 
         // 构建messages
         List<ChatMessage> messages =
@@ -47,20 +56,49 @@ public class AiChatServiceImpl
             );
 
         // AI回复
-        String reply =
-            openAiClient.chat(messages);
+        String reply = openAiClient.chat(messages);
 
-        // 保存用户消息
-        save(userId,
-            "user",
-            message);
+        // 写Redis历史上下文
+        ChatMessage userMessage = new ChatMessage();
+        userMessage.setRole("user");
+        userMessage.setContent(message);
+        chatContextCache.append(userId, userMessage);
 
-        // 保存AI消息
-        save(userId,
-            "assistant",
-            reply);
+        ChatMessage assistantMessage = new ChatMessage();
+        assistantMessage.setRole("assistant");
+        assistantMessage.setContent(reply);
+        chatContextCache.append(userId, assistantMessage);
+
+        // 保存数据库
+        save(userId, "user", message);
+        save(userId, "assistant", reply);
 
         return reply;
+    }
+
+    private List<ChatMessage> loadFromDb(Long userId) {
+        QueryWrapper<ChatRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId)
+            .orderByDesc("create_time");
+
+        List<ChatRecord> records = chatRecordMapper.selectList(queryWrapper);
+        List<ChatMessage> history = new ArrayList<>();
+
+        for (ChatRecord record : records) {
+            ChatMessage message = new ChatMessage();
+            message.setRole(record.getRole());
+            message.setContent(record.getMessage());
+            history.add(message);
+        }
+
+        return history;
+    }
+
+    private void cacheContext(Long userId,
+                              List<ChatMessage> history) {
+        for (int i = history.size() - 1; i >= 0; i--) {
+            chatContextCache.append(userId, history.get(i));
+        }
     }
 
     /**

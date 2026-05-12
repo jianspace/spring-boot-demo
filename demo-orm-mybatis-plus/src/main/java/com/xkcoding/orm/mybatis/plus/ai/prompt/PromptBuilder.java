@@ -1,14 +1,7 @@
 package com.xkcoding.orm.mybatis.plus.ai.prompt;
 
 import com.xkcoding.orm.mybatis.plus.ai.dto.ChatMessage;
-import com.xkcoding.orm.mybatis.plus.chat.domain.ChatRecord;
 import org.springframework.stereotype.Component;
-
-
-
-import java.util.List;
-
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,12 +14,11 @@ public class PromptBuilder {
      * 构建 messages
      */
     public List<ChatMessage> build(
-        List<ChatRecord> history,
+        List<ChatMessage> history,
         String userMessage
     ) {
 
-        List<ChatMessage> messages =
-            new ArrayList<>();
+        List<ChatMessage> messages = new ArrayList<>();
 
         // system prompt
         ChatMessage system = new ChatMessage();
@@ -38,14 +30,8 @@ public class PromptBuilder {
         // 历史记录（倒序转正序）
         Collections.reverse(history);
 
-        for (ChatRecord record : history) {
-
-            ChatMessage msg = new ChatMessage();
-
-            msg.setRole(record.getRole());
-            msg.setContent(record.getMessage());
-
-            messages.add(msg);
+        for (ChatMessage record : history) {
+            messages.add(record);
         }
 
         // 当前用户消息
