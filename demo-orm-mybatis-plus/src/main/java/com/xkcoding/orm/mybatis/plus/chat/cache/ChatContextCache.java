@@ -2,6 +2,7 @@ package com.xkcoding.orm.mybatis.plus.chat.cache;
 
 import com.alibaba.fastjson2.JSON;
 import com.xkcoding.orm.mybatis.plus.ai.dto.ChatMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,13 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Redis聊天上下文缓存
+ * 版本: 1.0
+ * 创建日期: 2026-05-12
+ * 功能: 缓存最近20条聊天记录，TTL 30分钟
+ */
+@Slf4j
 @Service
 public class ChatContextCache {
 

@@ -1,47 +1,36 @@
 package com.xkcoding.orm.mybatis.plus.ai.prompt;
 
 import com.xkcoding.orm.mybatis.plus.ai.dto.ChatMessage;
+import com.xkcoding.orm.mybatis.plus.ai.prompt.strategy.PromptStrategy;
+import com.xkcoding.orm.mybatis.plus.chat.domain.UserProfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * Prompt构建器
+ * 版本: 1.1
+ * 修改日期: 2026-05-12
+ * 修改内容: 重构为策略模式，支持用户画像和长期记忆融合
+ */
 @Component
 public class PromptBuilder {
 
-    /**
-     * 构建 messages
-     */
+    @Autowired
+    private PromptStrategy promptStrategy;
+
     public List<ChatMessage> build(
         List<ChatMessage> history,
-        String userMessage
+        String userMessage,
+        UserProfile userProfile,
+        String memorySummary
     ) {
-
-        List<ChatMessage> messages = new ArrayList<>();
-
-        // system prompt
-        ChatMessage system = new ChatMessage();
-        system.setRole("system");
-        system.setContent("你是一个温柔、专业的AI助手。回答简洁自然。");
-
-        messages.add(system);
-
-        // 历史记录（倒序转正序）
-        Collections.reverse(history);
-
-        for (ChatMessage record : history) {
-            messages.add(record);
-        }
-
-        // 当前用户消息
-        ChatMessage user = new ChatMessage();
-
-        user.setRole("user");
-        user.setContent(userMessage);
-
-        messages.add(user);
-
-        return messages;
+        return promptStrategy.build(
+            userProfile,
+            memorySummary,
+            history,
+            userMessage
+        );
     }
 }

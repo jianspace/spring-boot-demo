@@ -34,6 +34,21 @@ public class ChatRecord implements Serializable {
      */
     private String message;
 
+    /**
+     * prompt_tokens
+     */
+    private Integer promptTokens;
+
+    /**
+     * completion_tokens
+     */
+    private Integer completionTokens;
+
+    /**
+     * total_tokens
+     */
+    private Integer totalTokens;
+
     @TableField(fill = INSERT)
     private Date createTime;
 }
